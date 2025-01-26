@@ -1,0 +1,6 @@
+@ChullaApi_HostAddress = http://localhost:5020
+
+GET {{ChullaApi_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
