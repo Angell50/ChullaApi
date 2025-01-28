@@ -11,6 +11,7 @@ builder.Services.AddSingleton(new UsuarioRepository(dbPath));
 builder.Services.AddSingleton(new ProductoRepository(dbPath));
 builder.Services.AddSingleton(new IngresoRepository(dbPath));
 builder.Services.AddSingleton(new PedidoRepository(dbPath));
+builder.Services.AddSingleton(new DetallePedidoRepository(dbPath));
 
 
 // Agregar servicios al contenedor
