@@ -8,7 +8,7 @@ namespace ChullaApi.Models
         public int Id { get; set; }
 
         [Required]
-        [MaxLength(100)]
+        [System.ComponentModel.DataAnnotations.MaxLength(100)]
         public string Nombre { get; set; }
 
         [Required]

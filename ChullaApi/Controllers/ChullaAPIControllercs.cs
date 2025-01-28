@@ -1,8 +1,7 @@
 ﻿using ChullaApi.Models;
+using ChullaApi.Data;
 using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace ChullaApi.Controllers
 {
@@ -10,30 +9,30 @@ namespace ChullaApi.Controllers
     [Route("api/[controller]")]
     public class ChullaAPIController : ControllerBase
     {
-        // Lista en memoria para almacenar los usuarios
-        private static List<Usuario> _usuarios = new List<Usuario>
-        {
-            new Usuario { Id = 1, Nombre = "Juan Perez", Email = "juan.perez@example.com", EsAdmin = false },
-            new Usuario { Id = 2, Nombre = "Ana Gomez", Email = "ana.gomez@example.com", EsAdmin = true },
-            new Usuario { Id = 3, Nombre = "Carlos Lopez", Email = "carlos.lopez@example.com", EsAdmin = false }
-        };
+        private readonly UsuarioRepository _repository;
 
-        // Método GET para devolver datos quemados
+        public ChullaAPIController(UsuarioRepository repository)
+        {
+            _repository = repository;
+        }
+
+        // Método GET para devolver todos los usuarios
         [HttpGet]
         public IActionResult GetUsuarios()
         {
-            return Ok(_usuarios); // Devuelve un código HTTP 200 con el JSON
+            var usuarios = _repository.GetAllUsuarios();
+            return Ok(usuarios); // Devuelve un código HTTP 200 con el JSON
         }
 
         // Método GET para devolver un usuario por ID
         [HttpGet("{id}")]
         public IActionResult GetUsuario(int id)
         {
-            var usuario = _usuarios.FirstOrDefault(u => u.Id == id);
+            var usuario = _repository.GetUsuarioById(id);
 
             if (usuario == null)
             {
-                return NotFound();
+                return NotFound("Usuario no encontrado.");
             }
 
             return Ok(usuario);
@@ -53,9 +52,7 @@ namespace ChullaApi.Controllers
                 return BadRequest(ModelState);
             }
 
-            // Asigna un nuevo ID al usuario
-            usuario.Id = _usuarios.Max(u => u.Id) + 1;
-            _usuarios.Add(usuario); // Agrega el usuario a la lista en memoria
+            _repository.AddNewUsuario(usuario);
 
             // Devuelve un código HTTP 201 con la información del usuario creado
             return CreatedAtAction(nameof(GetUsuario), new { id = usuario.Id }, usuario);
@@ -70,20 +67,22 @@ namespace ChullaApi.Controllers
                 return BadRequest("Datos del usuario inválidos.");
             }
 
-            var usuario = _usuarios.FirstOrDefault(u => u.Id == id);
-            if (usuario == null)
+            var usuarioExistente = _repository.GetUsuarioById(id);
+            if (usuarioExistente == null)
             {
-                return NotFound();
+                return NotFound("Usuario no encontrado.");
             }
 
-            usuario.Nombre = usuarioActualizado.Nombre;
-            usuario.Email = usuarioActualizado.Email;
-            usuario.EsAdmin = usuarioActualizado.EsAdmin;
+            // Actualizar los datos del usuario existente
+            usuarioExistente.Nombre = usuarioActualizado.Nombre;
+            usuarioExistente.Email = usuarioActualizado.Email;
+            usuarioExistente.EsAdmin = usuarioActualizado.EsAdmin;
 
-            return Ok("El cambio se realizó correctamente."); // Devuelve un código HTTP 200 con un mensaje de éxito
+            _repository.UpdateUsuario(usuarioExistente);
+
+            return Ok("El usuario se actualizó correctamente.");
         }
 
-        // Método PATCH para actualizar parcialmente un usuario
         // Método PATCH para actualizar parcialmente un usuario
         [HttpPatch("{id}")]
         public IActionResult PatchUsuario(int id, [FromBody] Usuario usuarioActualizado)
@@ -93,38 +92,43 @@ namespace ChullaApi.Controllers
                 return BadRequest("Datos del usuario inválidos.");
             }
 
-            var usuario = _usuarios.FirstOrDefault(u => u.Id == id);
-            if (usuario == null)
+            var usuarioExistente = _repository.GetUsuarioById(id);
+            if (usuarioExistente == null)
             {
-                return NotFound();
+                return NotFound("Usuario no encontrado.");
             }
 
-            if (usuarioActualizado.Nombre != null)
+            // Actualizar solo los campos proporcionados
+            if (!string.IsNullOrEmpty(usuarioActualizado.Nombre))
             {
-                usuario.Nombre = usuarioActualizado.Nombre;
+                usuarioExistente.Nombre = usuarioActualizado.Nombre;
             }
-            if (usuarioActualizado.Email != null)
-            {
-                usuario.Email = usuarioActualizado.Email;
-            }
-            usuario.EsAdmin = usuarioActualizado.EsAdmin;
 
-            return Ok("El cambio se realizó correctamente."); // Devuelve un código HTTP 200 con un mensaje de éxito
+            if (!string.IsNullOrEmpty(usuarioActualizado.Email))
+            {
+                usuarioExistente.Email = usuarioActualizado.Email;
+            }
+
+            usuarioExistente.EsAdmin = usuarioActualizado.EsAdmin;
+
+            _repository.UpdateUsuario(usuarioExistente);
+
+            return Ok("El usuario se actualizó parcialmente.");
         }
 
         // Método DELETE para eliminar un usuario
         [HttpDelete("{id}")]
         public IActionResult DeleteUsuario(int id)
         {
-            var usuario = _usuarios.FirstOrDefault(u => u.Id == id);
+            var usuario = _repository.GetUsuarioById(id);
             if (usuario == null)
             {
-                return NotFound();
+                return NotFound("Usuario no encontrado.");
             }
 
-            _usuarios.Remove(usuario);
+            _repository.DeleteUsuario(id);
 
-            return Ok("El usuario se eliminó correctamente."); // Devuelve un código HTTP 200 con un mensaje de éxito
+            return Ok("El usuario se eliminó correctamente.");
         }
     }
 }
