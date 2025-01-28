@@ -3,7 +3,7 @@ using SQLite;
 
 namespace ChullaApi.Models
 {
-    public class Usuario
+    public class Producto
     {
         [Key]
         [PrimaryKey, AutoIncrement]
@@ -14,12 +14,16 @@ namespace ChullaApi.Models
         public string Nombre { get; set; }
 
         [Required]
-        [EmailAddress]
-        public string Email { get; set; }
+        public int Cantidad { get; set; }
 
         [Required]
-        public string Contraseña { get; set; }
+        [System.ComponentModel.DataAnnotations.MaxLength(50)]
+        public string Categoria { get; set; }
 
-        public bool EsAdmin { get; set; } = false;
+        [Required]
+        public decimal Precio { get; set; }
+
+        [System.ComponentModel.DataAnnotations.MaxLength(500)]
+        public string Descripcion { get; set; }
     }
 }
