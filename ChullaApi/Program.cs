@@ -9,6 +9,9 @@ string dbPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder
 // Registrar UsuarioRepository como un servicio singleton
 builder.Services.AddSingleton(new UsuarioRepository(dbPath));
 builder.Services.AddSingleton(new ProductoRepository(dbPath));
+builder.Services.AddSingleton(new IngresoRepository(dbPath));
+builder.Services.AddSingleton(new PedidoRepository(dbPath));
+
 
 // Agregar servicios al contenedor
 builder.Services.AddControllers();
