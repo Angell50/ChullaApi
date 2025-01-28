@@ -16,15 +16,13 @@ namespace ChullaApi.Controllers
             _repository = repository;
         }
 
-        // Método GET para devolver todos los usuarios
         [HttpGet]
         public IActionResult GetUsuarios()
         {
             var usuarios = _repository.GetAllUsuarios();
-            return Ok(usuarios); // Devuelve un código HTTP 200 con el JSON
+            return Ok(usuarios); 
         }
 
-        // Método GET para devolver un usuario por ID
         [HttpGet("{id}")]
         public IActionResult GetUsuario(int id)
         {
@@ -38,7 +36,6 @@ namespace ChullaApi.Controllers
             return Ok(usuario);
         }
 
-        // Método POST para crear un usuario
         [HttpPost]
         public IActionResult CreateUsuario([FromBody] Usuario usuario)
         {
@@ -54,11 +51,9 @@ namespace ChullaApi.Controllers
 
             _repository.AddNewUsuario(usuario);
 
-            // Devuelve un código HTTP 201 con la información del usuario creado
             return CreatedAtAction(nameof(GetUsuario), new { id = usuario.Id }, usuario);
         }
 
-        // Método PUT para actualizar un usuario
         [HttpPut("{id}")]
         public IActionResult UpdateUsuario(int id, [FromBody] Usuario usuarioActualizado)
         {
@@ -73,7 +68,6 @@ namespace ChullaApi.Controllers
                 return NotFound("Usuario no encontrado.");
             }
 
-            // Actualizar los datos del usuario existente
             usuarioExistente.Nombre = usuarioActualizado.Nombre;
             usuarioExistente.Email = usuarioActualizado.Email;
             usuarioExistente.EsAdmin = usuarioActualizado.EsAdmin;
@@ -83,7 +77,6 @@ namespace ChullaApi.Controllers
             return Ok("El usuario se actualizó correctamente.");
         }
 
-        // Método PATCH para actualizar parcialmente un usuario
         [HttpPatch("{id}")]
         public IActionResult PatchUsuario(int id, [FromBody] Usuario usuarioActualizado)
         {
@@ -98,7 +91,6 @@ namespace ChullaApi.Controllers
                 return NotFound("Usuario no encontrado.");
             }
 
-            // Actualizar solo los campos proporcionados
             if (!string.IsNullOrEmpty(usuarioActualizado.Nombre))
             {
                 usuarioExistente.Nombre = usuarioActualizado.Nombre;
@@ -116,7 +108,6 @@ namespace ChullaApi.Controllers
             return Ok("El usuario se actualizó parcialmente.");
         }
 
-        // Método DELETE para eliminar un usuario
         [HttpDelete("{id}")]
         public IActionResult DeleteUsuario(int id)
         {

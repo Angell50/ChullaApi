@@ -16,15 +16,13 @@ namespace ChullaApi.Controllers
             _repository = repository;
         }
 
-        // Método GET para devolver todos los ingresos
         [HttpGet]
         public IActionResult GetIngresos()
         {
             var ingresos = _repository.GetAllIngresos();
-            return Ok(ingresos); // Devuelve un código HTTP 200 con el JSON
+            return Ok(ingresos); 
         }
 
-        // Método GET para devolver un ingreso por ID
         [HttpGet("{id}")]
         public IActionResult GetIngreso(int id)
         {
@@ -38,7 +36,6 @@ namespace ChullaApi.Controllers
             return Ok(ingreso);
         }
 
-        // Método POST para crear un ingreso
         [HttpPost]
         public IActionResult CreateIngreso([FromBody] Ingreso ingreso)
         {
@@ -54,11 +51,9 @@ namespace ChullaApi.Controllers
 
             _repository.AddNewIngreso(ingreso);
 
-            // Devuelve un código HTTP 201 con la información del ingreso creado
             return CreatedAtAction(nameof(GetIngreso), new { id = ingreso.Id }, ingreso);
         }
 
-        // Método PUT para actualizar un ingreso
         [HttpPut("{id}")]
         public IActionResult UpdateIngreso(int id, [FromBody] Ingreso ingresoActualizado)
         {
@@ -73,7 +68,6 @@ namespace ChullaApi.Controllers
                 return NotFound("Ingreso no encontrado.");
             }
 
-            // Actualizar los datos del ingreso existente
             ingresoExistente.UsuarioId = ingresoActualizado.UsuarioId;
             ingresoExistente.FechaIngreso = ingresoActualizado.FechaIngreso;
 
@@ -82,7 +76,6 @@ namespace ChullaApi.Controllers
             return Ok("El ingreso se actualizó correctamente.");
         }
 
-        // Método DELETE para eliminar un ingreso
         [HttpDelete("{id}")]
         public IActionResult DeleteIngreso(int id)
         {

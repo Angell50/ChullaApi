@@ -16,15 +16,13 @@ namespace ChullaApi.Controllers
             _repository = repository;
         }
 
-        // Método GET para devolver todos los pedidos
         [HttpGet]
         public IActionResult GetPedidos()
         {
             var pedidos = _repository.GetAllPedidos();
-            return Ok(pedidos); // Devuelve un código HTTP 200 con el JSON
+            return Ok(pedidos);
         }
 
-        // Método GET para devolver un pedido por ID
         [HttpGet("{id}")]
         public IActionResult GetPedido(int id)
         {
@@ -38,7 +36,6 @@ namespace ChullaApi.Controllers
             return Ok(pedido);
         }
 
-        // Método POST para crear un pedido
         [HttpPost]
         public IActionResult CreatePedido([FromBody] Pedido pedido)
         {
@@ -52,16 +49,13 @@ namespace ChullaApi.Controllers
                 return BadRequest(ModelState);
             }
 
-            // Asignar la fecha actual a FechaPedido
             pedido.FechaPedido = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
 
             _repository.AddNewPedido(pedido);
 
-            // Devuelve un código HTTP 201 con la información del pedido creado
             return CreatedAtAction(nameof(GetPedido), new { id = pedido.Id }, pedido);
         }
 
-        // Método PUT para actualizar un pedido
         [HttpPut("{id}")]
         public IActionResult UpdatePedido(int id, [FromBody] Pedido pedidoActualizado)
         {
@@ -76,9 +70,8 @@ namespace ChullaApi.Controllers
                 return NotFound("Pedido no encontrado.");
             }
 
-            // Actualizar los datos del pedido existente
             pedidoExistente.UsuarioId = pedidoActualizado.UsuarioId;
-            pedidoExistente.FechaPedido = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"); // Asignar la fecha actual
+            pedidoExistente.FechaPedido = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"); 
             pedidoExistente.Total = pedidoActualizado.Total;
 
             _repository.UpdatePedido(pedidoExistente);
@@ -86,7 +79,6 @@ namespace ChullaApi.Controllers
             return Ok("El pedido se actualizó correctamente.");
         }
 
-        // Método DELETE para eliminar un pedido
         [HttpDelete("{id}")]
         public IActionResult DeletePedido(int id)
         {

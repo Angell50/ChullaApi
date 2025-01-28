@@ -16,15 +16,13 @@ namespace ChullaApi.Controllers
             _repository = repository;
         }
 
-        // Método GET para devolver todos los productos
         [HttpGet]
         public IActionResult GetProductos()
         {
             var productos = _repository.GetAllProductos();
-            return Ok(productos); // Devuelve un código HTTP 200 con el JSON
+            return Ok(productos); 
         }
 
-        // Método GET para devolver un producto por ID
         [HttpGet("{id}")]
         public IActionResult GetProducto(int id)
         {
@@ -38,7 +36,6 @@ namespace ChullaApi.Controllers
             return Ok(producto);
         }
 
-        // Método POST para crear un producto
         [HttpPost]
         public IActionResult CreateProducto([FromBody] Producto producto)
         {
@@ -54,11 +51,9 @@ namespace ChullaApi.Controllers
 
             _repository.AddNewProducto(producto);
 
-            // Devuelve un código HTTP 201 con la información del producto creado
             return CreatedAtAction(nameof(GetProducto), new { id = producto.Id }, producto);
         }
 
-        // Método PUT para actualizar un producto
         [HttpPut("{id}")]
         public IActionResult UpdateProducto(int id, [FromBody] Producto productoActualizado)
         {
@@ -73,7 +68,6 @@ namespace ChullaApi.Controllers
                 return NotFound("Producto no encontrado.");
             }
 
-            // Actualizar los datos del producto existente
             productoExistente.Nombre = productoActualizado.Nombre;
             productoExistente.Cantidad = productoActualizado.Cantidad;
             productoExistente.Categoria = productoActualizado.Categoria;
@@ -85,7 +79,6 @@ namespace ChullaApi.Controllers
             return Ok("El producto se actualizó correctamente.");
         }
 
-        // Método PATCH para actualizar parcialmente un producto
         [HttpPatch("{id}")]
         public IActionResult PatchProducto(int id, [FromBody] Producto productoActualizado)
         {
@@ -100,7 +93,6 @@ namespace ChullaApi.Controllers
                 return NotFound("Producto no encontrado.");
             }
 
-            // Actualizar solo los campos proporcionados
             if (!string.IsNullOrEmpty(productoActualizado.Nombre))
             {
                 productoExistente.Nombre = productoActualizado.Nombre;
@@ -131,7 +123,6 @@ namespace ChullaApi.Controllers
             return Ok("El producto se actualizó parcialmente.");
         }
 
-        // Método DELETE para eliminar un producto
         [HttpDelete("{id}")]
         public IActionResult DeleteProducto(int id)
         {

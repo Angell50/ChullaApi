@@ -16,15 +16,13 @@ namespace ChullaApi.Controllers
             _repository = repository;
         }
 
-        // Método GET para devolver todos los detalles de pedidos
         [HttpGet]
         public IActionResult GetDetallesPedido()
         {
             var detalles = _repository.GetAllDetallesPedido();
-            return Ok(detalles); // Devuelve un código HTTP 200 con el JSON
+            return Ok(detalles); 
         }
 
-        // Método GET para devolver un detalle de pedido por ID
         [HttpGet("{id}")]
         public IActionResult GetDetallePedido(int id)
         {
@@ -38,7 +36,6 @@ namespace ChullaApi.Controllers
             return Ok(detalle);
         }
 
-        // Método POST para crear un detalle de pedido
         [HttpPost]
         public IActionResult CreateDetallePedido([FromBody] DetallePedido detalle)
         {
@@ -54,11 +51,9 @@ namespace ChullaApi.Controllers
 
             _repository.AddNewDetallePedido(detalle);
 
-            // Devuelve un código HTTP 201 con la información del detalle de pedido creado
             return CreatedAtAction(nameof(GetDetallePedido), new { id = detalle.Id }, detalle);
         }
 
-        // Método PUT para actualizar un detalle de pedido
         [HttpPut("{id}")]
         public IActionResult UpdateDetallePedido(int id, [FromBody] DetallePedido detalleActualizado)
         {
@@ -73,7 +68,6 @@ namespace ChullaApi.Controllers
                 return NotFound("Detalle de pedido no encontrado.");
             }
 
-            // Actualizar los datos del detalle de pedido existente
             detalleExistente.PedidoId = detalleActualizado.PedidoId;
             detalleExistente.ProductoId = detalleActualizado.ProductoId;
             detalleExistente.Cantidad = detalleActualizado.Cantidad;
@@ -84,7 +78,6 @@ namespace ChullaApi.Controllers
             return Ok("El detalle de pedido se actualizó correctamente.");
         }
 
-        // Método DELETE para eliminar un detalle de pedido
         [HttpDelete("{id}")]
         public IActionResult DeleteDetallePedido(int id)
         {

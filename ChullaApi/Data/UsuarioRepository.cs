@@ -10,12 +10,10 @@ namespace ChullaApi.Data
 
         public UsuarioRepository(string dbPath)
         {
-            // Inicializa la conexión con SQLite
             _connection = new SQLiteConnection(dbPath);
             _connection.CreateTable<Usuario>();
         }
 
-        // Método para agregar un nuevo usuario
         public void AddNewUsuario(Usuario usuario)
         {
             if (usuario != null)
@@ -24,19 +22,16 @@ namespace ChullaApi.Data
             }
         }
 
-        // Método para obtener todos los usuarios
         public List<Usuario> GetAllUsuarios()
         {
             return _connection.Table<Usuario>().ToList();
         }
 
-        // Método para obtener un usuario por ID
         public Usuario GetUsuarioById(int id)
         {
             return _connection.Find<Usuario>(id);
         }
 
-        // Método para actualizar un usuario existente
         public void UpdateUsuario(Usuario usuario)
         {
             if (usuario != null)
@@ -45,7 +40,6 @@ namespace ChullaApi.Data
             }
         }
 
-        // Método para eliminar un usuario por ID
         public void DeleteUsuario(int id)
         {
             var usuario = GetUsuarioById(id);

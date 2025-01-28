@@ -11,12 +11,10 @@ namespace ChullaApi.Data
 
         public IngresoRepository(string dbPath)
         {
-            // Inicializa la conexión con SQLite
             _connection = new SQLiteConnection(dbPath);
             _connection.CreateTable<Ingreso>();
         }
 
-        // Método para agregar un nuevo ingreso
         public void AddNewIngreso(Ingreso ingreso)
         {
             if (ingreso != null)
@@ -26,19 +24,16 @@ namespace ChullaApi.Data
             }
         }
 
-        // Método para obtener todos los ingresos
         public List<Ingreso> GetAllIngresos()
         {
             return _connection.Table<Ingreso>().ToList();
         }
 
-        // Método para obtener un ingreso por ID
         public Ingreso GetIngresoById(int id)
         {
             return _connection.Find<Ingreso>(id);
         }
 
-        // Método para actualizar un ingreso existente
         public void UpdateIngreso(Ingreso ingreso)
         {
             if (ingreso != null)
@@ -48,7 +43,6 @@ namespace ChullaApi.Data
             }
         }
 
-        // Método para eliminar un ingreso por ID
         public void DeleteIngreso(int id)
         {
             var ingreso = GetIngresoById(id);
